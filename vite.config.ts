@@ -13,5 +13,17 @@ export default defineConfig({
   server: {
     host: true,
     port: 3000
+  },
+  base: './', // 确保生产环境使用相对路径
+  build: {
+    outDir: 'dist',
+    sourcemap: false,
+    rollupOptions: {
+      output: {
+        manualChunks: {
+          vendor: ['react', 'react-dom', 'react-router-dom']
+        }
+      }
+    }
   }
 })

@@ -1,0 +1,184 @@
+# {{project_name}} 项目规范
+
+> 本文档是 {{project_name}} 项目的核心索引，提供快速导航。详细内容请查阅 `rules/` 和 `skills/` 目录。
+
+## 项目定位
+
+**{{project_name}}** 是 {{project_description}}。
+
+**核心特点**：
+- 特点1（请根据项目实际情况填写）
+- 特点2
+- 特点3
+
+---
+
+## 核心原则速览
+
+| # | 原则 | 一句话说明 |
+|---|------|-----------|
+| 1 | **代码质量优先** | 所有代码变更需遵循项目规范，保证可维护性 |
+| 2 | **测试覆盖** | 新功能需有测试，核心模块覆盖率 ≥ 70% |
+| 3 | **文档同步** | 代码变更需同步更新相关文档 |
+
+> 请根据项目实际情况调整原则
+
+---
+
+## 目录结构速览
+
+```
+{{project_name}}/
+├── src/              # 源代码（请根据项目调整）
+├── tests/            # 测试代码
+├── docs/             # 文档
+└── .comate/          # Spec Mode 工作目录
+```
+
+---
+
+## 渐进式披露机制
+
+> 技能和规则均采用 **LOD（Level of Detail）** 渐进式加载，优化 Token 效率。
+
+### Skills 加载层级
+
+| 层级 | 内容 | Token 消耗 | 加载时机 |
+|-----|------|-----------|---------|
+| **LOD-0 索引** | [SKILLS_INDEX.md](skills/SKILLS_INDEX.md) | ~50 行 | 对话启动时 |
+| **LOD-1 主文档** | 完整 SKILL.md | < 500 行 | 技能被触发时 |
+| **LOD-2 资源** | references/, scripts/ | 按需 | 需要详细信息时 |
+
+### Rules 加载层级
+
+| 层级 | 内容 | Token 消耗 | 加载时机 |
+|-----|------|-----------|---------|
+| **LOD-0 索引** | [RULES_INDEX.md](rules/RULES_INDEX.md) | ~30 行 | 对话启动时 |
+| **LOD-1 规则** | 完整 .mdr 文件 | < 300 行 | 规则被触发时 |
+
+**触发方式**：
+- **显式调用**：用户明确提到技能/规则名称
+- **隐式调用**：用户请求中包含**触发词**时自动匹配
+- **文件匹配**：编辑匹配 globs 模式的文件时自动加载规则
+- **始终生效**：alwaysApply=true 的规则在对话启动时自动加载
+
+---
+
+## 按需加载规则
+
+> **重要**：在执行任务前，请根据以下规则加载相关文档。
+
+### 自动加载规则
+
+| 任务场景 | 需要读取的文档 |
+|---------|--------------|
+| **复杂需求开发** | `rules/spec-mode.mdr`（自动加载） |
+| **所有代码变更** | 根据文件路径匹配相应规则 |
+
+### 技能加载规则
+
+| 你要做的事情 | 先读取这个技能文档 |
+|------------|------------------|
+| 创建新技能 | `skills/skill-creator/SKILL.md` |
+| 创建新规则 | `skills/rules-creator/SKILL.md` |
+
+---
+
+## 规则导航
+
+> 完整索引详见 [RULES_INDEX.md](rules/RULES_INDEX.md)
+
+| 规则文件 | 触发条件 | 内容概要 |
+|---------|---------|---------|
+| [spec-mode.mdr](rules/spec-mode.mdr) | 始终生效 | Spec Mode 工作流规则 |
+
+---
+
+## 技能导航
+
+### 元技能
+
+| 技能文件 | 适用场景 |
+|---------|---------|
+| [skill-creator](skills/skill-creator/SKILL.md) | 为项目添加新的技能文档 |
+| [rules-creator](skills/rules-creator/SKILL.md) | 为项目添加新的规则文档 |
+
+---
+
+## 快速命令参考
+
+```bash
+# 构建（请根据项目实际情况调整）
+make build
+
+# 测试
+make test
+
+# 运行
+make run
+
+# 创建新技能
+python3 .comate/skills/skill-creator/scripts/init_skill.py <skill-name>
+
+# 同步技能索引
+python3 .comate/skills/skill-creator/scripts/sync_skills.py
+
+# 创建新规则
+python3 .comate/skills/rules-creator/scripts/init_rule.py <rule-name>
+
+# 同步规则索引
+python3 .comate/skills/rules-creator/scripts/sync_rules.py
+```
+
+---
+
+## 变更管理（Spec Mode）
+
+变更/需求文档存放于 `.comate/specs/` 目录，遵循以下工作流：
+
+### Spec Mode 工作流
+
+```
+开始任务                                      任务完成
+    │                                           │
+    ▼                                           ▼
+创建 .comate/specs/active/{需求名}/  ──────→  移动到 .comate/specs/archive/{日期}-{需求名}/
+    │                                           │
+    ├── doc.md      (需求文档)                   └── 保留完整历史
+    ├── tasks.md    (任务清单)
+    └── summary.md  (完成总结)
+```
+
+### 目录结构
+
+```
+.comate/specs/
+├── active/              # 进行中的需求（Spec Mode 工作目录）
+│   └── {需求名}/
+│       ├── doc.md       # 需求背景、技术方案、影响范围
+│       ├── tasks.md     # 任务清单（checkbox 形式）
+│       └── summary.md   # 完成总结
+└── archive/             # 已完成归档
+    └── {YYYY-MM-DD}-{需求名}/
+```
+
+### 生命周期规则
+
+| 阶段 | 触发条件 | 操作 |
+|-----|---------|------|
+| **开始** | 用户说"开始 spec mode"或描述新需求 | 在 `active/` 下创建 `{需求名}/` 目录 |
+| **进行中** | 执行任务过程中 | 更新 `tasks.md` 的 checkbox 状态 |
+| **完成** | 用户说"spec 完成"或任务全部完成 | 1. 生成 `summary.md`<br>2. 将目录移动到 `archive/{日期}-{需求名}/` |
+
+### 归档命令示例
+
+```bash
+# 归档完成的 spec（{需求名} 替换为实际名称）
+mv .comate/specs/active/{需求名} .comate/specs/archive/$(date +%Y-%m-%d)-{需求名}
+```
+
+---
+
+## 相关文档
+
+- [技术文档](docs/) - 项目技术文档目录

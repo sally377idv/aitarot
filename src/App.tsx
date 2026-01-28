@@ -10,7 +10,7 @@ function App() {
   const [sessionCache, setSessionCache] = useState<DivinationSession | null>(null)
 
   return (
-    <Router>
+    <Router basename={import.meta.env.BASE_URL}>
       <div className="min-h-screen bg-gradient-to-br from-purple-50 to-blue-50">
         <Routes>
           <Route 
@@ -40,6 +40,16 @@ function App() {
               onSessionUpdated={(session) => setSessionCache(session)}
             />} 
           />
+          {/* 处理404路由 */}
+          <Route path="*" element={
+            <div className="min-h-screen flex items-center justify-center">
+              <div className="text-center">
+                <h1 className="text-2xl font-bold text-gray-800">页面未找到</h1>
+                <p className="text-gray-600 mt-2">请检查URL或返回首页</p>
+                <a href="/" className="btn-primary mt-4 inline-block">返回首页</a>
+              </div>
+            </div>
+          } />
         </Routes>
       </div>
     </Router>

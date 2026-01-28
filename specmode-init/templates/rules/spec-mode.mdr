@@ -1,0 +1,81 @@
+---
+description: Spec Mode 工作流规则，确保复杂需求开发遵循统一的规划和执行流程
+globs: 
+alwaysApply: true
+---
+
+# Rule: Spec Mode 工作流
+
+> 在进行复杂需求开发时，必须遵循 Spec Mode 工作流，确保需求理解、任务规划和执行的一致性。
+
+## 触发条件
+
+当满足以下任一条件时，**必须**进入 Spec Mode：
+- 用户明确说"开始 spec mode"、"进入 spec 模式"
+- 用户描述一个需要多步骤完成的**新需求**或**复杂任务**
+- 用户提供了功能需求、Bug 修复、重构等任务描述
+
+## 核心约束
+
+### 1. 首次加载必读
+
+开始任务前，**必须**先读取项目规范索引：
+
+```
+.comate/spec.md
+```
+
+该文件包含：
+- 项目定位和核心原则
+- 按需加载的规则和技能导航
+- Spec Mode 完整工作流说明
+
+### 2. Spec 目录规范
+
+| 阶段 | 目录位置 |
+|-----|---------|
+| **进行中** | `.comate/specs/active/{需求名}/` |
+| **已完成** | `.comate/specs/archive/{YYYY-MM-DD}-{需求名}/` |
+
+### 3. 三文档流程
+
+每个 Spec 必须包含：
+
+| 文档 | 时机 | 内容 |
+|-----|------|-----|
+| `doc.md` | 开发前 | 需求背景、技术方案、影响范围 |
+| `tasks.md` | 开发中 | 任务清单（checkbox），实时更新 |
+| `summary.md` | 开发后 | 完成总结、关键变更 |
+
+### 4. 生命周期操作
+
+**开始**：
+```bash
+# 创建 spec 目录
+mkdir -p .comate/specs/active/{需求名}
+```
+
+**完成**（用户说"spec 完成"时）：
+```bash
+# 归档到 archive
+mv .comate/specs/active/{需求名} .comate/specs/archive/$(date +%Y-%m-%d)-{需求名}
+```
+
+## 检查清单
+
+进入 Spec Mode 前：
+- [ ] 已读取 `.comate/spec.md`
+- [ ] 已在 `active/` 下创建需求目录
+- [ ] 已生成 `doc.md` 并获得用户确认
+- [ ] 已生成 `tasks.md` 并获得用户确认
+
+任务完成时：
+- [ ] 所有 `tasks.md` 中的任务已标记完成 `[x]`
+- [ ] 已生成 `summary.md`
+- [ ] 已将目录移动到 `archive/`
+
+## 相关技能
+
+- [spec.md](../spec.md) - 项目规范索引（必读）
+- [skill-creator](../skills/skill-creator/SKILL.md) - 创建新技能
+- [rules-creator](../skills/rules-creator/SKILL.md) - 创建新规则
