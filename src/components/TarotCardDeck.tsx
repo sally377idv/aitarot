@@ -6,14 +6,16 @@ interface TarotCardDeckProps {
   cardCount?: number
   onCardsDrawn?: (cards: DrawnCard[]) => void
   autoDraw?: boolean
+  preDrawnCards?: DrawnCard[] // 新增：预抽牌的卡片数据
 }
 
 const TarotCardDeck: React.FC<TarotCardDeckProps> = ({ 
   cardCount = 3, 
   onCardsDrawn,
-  autoDraw = false 
+  autoDraw = false,
+  preDrawnCards 
 }) => {
-  const [cards, setCards] = useState<DrawnCard[]>([])
+  const [cards, setCards] = useState<DrawnCard[]>(preDrawnCards || [])
   const [isDrawing, setIsDrawing] = useState(false)
   const [showCards, setShowCards] = useState(false)
 
@@ -39,6 +41,14 @@ const TarotCardDeck: React.FC<TarotCardDeckProps> = ({
       handleDrawCards()
     }
   }, [autoDraw, handleDrawCards])
+
+  // 处理预抽牌数据
+  useEffect(() => {
+    if (preDrawnCards && preDrawnCards.length > 0) {
+      setCards(preDrawnCards)
+      setShowCards(true)
+    }
+  }, [preDrawnCards])
 
   return (
     <div className="flex flex-col items-center">

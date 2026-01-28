@@ -101,6 +101,7 @@ const DrawResultPage: React.FC<DrawResultPageProps> = ({
           <TarotCardDeck 
             cardCount={3}
             onCardsDrawn={handleCardsDrawn}
+            preDrawnCards={session?.tarotResult}
           />
         )}
       </div>
