@@ -2,6 +2,7 @@
   "name": "ai-tarot-web-app",
   "private": true,
   "version": "1.0.0",
+  "homepage": "https://aitarot-amber.vercel.app",
   "type": "module",
   "scripts": {
     "dev": "vite",

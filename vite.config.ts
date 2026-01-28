@@ -14,7 +14,7 @@ export default defineConfig({
     host: true,
     port: 3000
   },
-  base: './', // 确保生产环境使用相对路径
+  base: '/', // 确保Vercel部署使用根路径
   build: {
     outDir: 'dist',
     sourcemap: false,
